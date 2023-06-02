@@ -3,7 +3,7 @@ import json
 from elastic_index import Index
 import requests
 import random
-
+import sqlite3 as sl
 
 app = Flask(__name__)
 
@@ -34,14 +34,31 @@ def browse():
     return json.dumps(ret_struc)
 
 def getNewId():
-    # placeholder for something database based
-    id = random.randint(0,1000)
-    return id
+    # maakt gebruik van een sql lite database voor gegarandeerde oplopende unieke ids 
+    con = sl.connect('datastories.db')
+    cur = con.cursor()
+    cur.execute("""
+            CREATE TABLE IF NOT EXISTS counter (
+                id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                status TEXT
+            );
+        """) 
+    con.commit()
+    sql = 'INSERT INTO counter (status) values(?)'
+    data = [('x')]        
+    cur.execute(sql, data)
+    con.commit()
+    # id = con.lastrowid #werkt niet bij deze
+    res = cur.execute("SELECT last_insert_rowid()")
+    con.commit()
+    id = res.fetchone()
+    unique_id = id[0]
+    return unique_id
 
 @app.route("/create_new")
 def create_new():
     id = getNewId()
-    stringie = 'I created something new! The id is: ' + str(id)
+    stringie = 'I created something new! De unieke 1id is: ' + str(id)
     return json.dumps(stringie)
 
 @app.route("/delete" , methods=['GET'])
@@ -56,5 +73,4 @@ def delete():
 
 if __name__ == '__main__':
     app.run()
-
 
