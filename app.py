@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import json
 from elastic_index import Index
 import requests
+import random
 
 
 app = Flask(__name__)
@@ -24,7 +25,7 @@ def after_request(response):
 
 @app.route("/")
 def hello_world():
-    retStruc = {"app": "Data Stories service", "version": "0.1"}
+    retStruc = {"app": "Data Stories slervice", "version": "0.1"}
     return json.dumps(retStruc)
 
 @app.route("/browse")
@@ -32,8 +33,28 @@ def browse():
     ret_struc = index.browse()
     return json.dumps(ret_struc)
 
+def getNewId():
+    # placeholder for something database based
+    id = random.randint(0,1000)
+    return id
+
+@app.route("/create_new")
+def create_new():
+    id = getNewId()
+    stringie = 'I created something new! The id is: ' + str(id)
+    return json.dumps(stringie)
+
+@app.route("/delete" , methods=['GET'])
+def delete():
+    id = request.args.get("ds")
+    print('I deleted a datastorie whith id:' + id)
+
+
+
+
 #Start main program
 
 if __name__ == '__main__':
     app.run()
+
 
