@@ -121,7 +121,35 @@ def getDataStories():
 
 @app.route("/update_datastory", methods=['POST'])
 def updateDataStory():
-    return
+    # params = {
+    #     'datastory_id': request.values.get('datastory_id'),
+    #     'datastory': request.get_json().get('datastory')
+    # }
+
+    datastory_id = request.get_json().get('datastory_id')
+    print(datastory_id)
+    datastory = request.get_json().get('datastory')
+    print(datastory)
+
+
+
+
+    # datastory_id = params['datastory_id']
+    # datastory = params['datastory']
+
+
+
+
+    # print(params)
+    # save the content to file
+    # print(datastory_id, type(datastory_id))
+    path = "data/" + str(datastory_id) + "/datastory.json"
+    # print(path)
+
+    with open(path, 'w') as f:
+        json.dump(datastory, f)
+    return json.dumps(datastory)
+    # return
 
 
 #Start main program

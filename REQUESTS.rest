@@ -1,0 +1,35 @@
+### update datastory
+
+POST http://localhost:5000/update_datastory 
+Content-type: application/json
+
+{
+    "datastory_id": "6a4a58a2-8777-4cbe-896c-85049a928768",
+    "testding" : "abracadabra",
+    "datastory": {
+        "title": "klootzak",
+        "owner": "Rob"
+    }
+
+
+}
+
+### get_datastory?ds=<uuid>
+
+http://localhost:5000/get_item?ds=6a4a58a2-8777-4cbe-896c-85049a928768
+
+
+### get datastories
+
+http://localhost:5000/get_data_stories
+
+
+
+### OPTIONS test
+
+OPTIONS  http://localhost:5000/browse
+
+###
+
+
+
