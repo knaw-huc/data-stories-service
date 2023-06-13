@@ -5,6 +5,9 @@ import requests
 import random
 import sqlite3 as sl
 import os
+from os.path import isfile, join, exists
+from werkzeug.utils import secure_filename
+
 
 from functions import (
     getNewId, createDataStoryFolder, removeFromDB, 
@@ -13,7 +16,12 @@ from functions import (
 )
 # https://peps.python.org/pep-0328/#rationale-for-parentheses
 
+
 app = Flask(__name__)
+app.secret_key = "secret key"
+app.config['UPLOAD_FOLDER'] = '/data'
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+
 
 config = {
     "url" : "localhost",
@@ -150,6 +158,46 @@ def updateDataStory():
         json.dump(datastory, f)
     return json.dumps(datastory)
     # return
+
+
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
+def allowed_file(filename):
+	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@app.route('/upload', methods = ['POST', 'OPTIONS']) 
+def upload(): #uploaded file from js / react
+    # print('request', request)
+    print('request.files: ', request.files)
+    print('request.headers: ', request.headers)
+    # print('request.data', request.data)
+    print('request.args: ', request.args)
+    print('request.form: ', request.form)
+    print('request.endpoint: ', request.endpoint)
+    print('request.method: ', request.method)
+    print('request.remote_addr: ', request.remote_addr)
+    # uuid = '6a4a58a2-8777-4cbe-896c-85049a928768' #test
+
+    uuid = request.form.get('uuid')
+    print('uuid', uuid)
+ 
+
+    uploaded_file = request.files['file'] # dit is niet de data dit is een datastorage object
+    filename = uploaded_file.filename
+    print('fn', filename)
+
+    data = uploaded_file.read() # je moet de bytes readen uit een DataStorage Object
+    filename = "data/" + uuid + '/resources/images/' + filename
+    with open(filename, 'ab') as f:
+         f.write(data)
+
+    if exists(filename):
+        status = "OK"
+    else:
+        status = "NOT OK"  
+
+    return json.dumps(status)
 
 
 #Start main program
