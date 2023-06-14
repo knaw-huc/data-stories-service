@@ -114,8 +114,6 @@ def get_item():
 # hier moet de sqllite database bevraagd worden, om de lijstpagina te genereren
 @app.route("/get_data_stories")
 def getDataStories():
-
-
     structure = {'message': 'nothing yet'}
     # data = 'data/'
     status = 'OK'
@@ -160,10 +158,10 @@ def updateDataStory():
     # return
 
 
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+# ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
-def allowed_file(filename):
-	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+# def allowed_file(filename):
+# 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @app.route('/upload', methods = ['POST', 'OPTIONS']) 
@@ -179,20 +177,38 @@ def upload(): #uploaded file from js / react
     print('request.remote_addr: ', request.remote_addr)
     # uuid = '6a4a58a2-8777-4cbe-896c-85049a928768' #test
 
-    uuid = request.form.get('uuid')
-    print('uuid', uuid)
+    uuid = request.form.get('uuid') # unique identifier of the data story
+    print("request.form.get('uuid')", uuid)
  
+    uploaded_file = request.files['file'] # this is a datastorage object, not the data itself
+    filename =  request.files['file'].filename
 
-    uploaded_file = request.files['file'] # dit is niet de data dit is een datastorage object
-    filename = uploaded_file.filename
-    print('fn', filename)
+    print("request.files['file'].filename: ", request.files['file'].filename)
+    print("request.files['file'].content_type: ", request.files['file'].content_type)
 
+    # filename = uploaded_file.filename
+    content_type = request.files['file'].content_type
+    
+    resources = "data/" + uuid + '/resources'
+
+    if content_type.startswith('image'):
+        store = resources + '/images/'
+    elif content_type.startswith('audio'):        
+        store = resources + '/audio/'
+    elif content_type.startswith('video'):    
+        store = resources + '/video/'
+    else:
+        json.dumps('Go Home!')
+        exit()
+        
+    # https://tedboy.github.io/flask/generated/generated/werkzeug.FileStorage.html
+
+    filepath = store + filename
     data = uploaded_file.read() # je moet de bytes readen uit een DataStorage Object
-    filename = "data/" + uuid + '/resources/images/' + filename
-    with open(filename, 'ab') as f:
+    with open(filepath, 'ab') as f:
          f.write(data)
 
-    if exists(filename):
+    if exists(filepath):
         status = "OK"
     else:
         status = "NOT OK"  
