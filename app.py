@@ -94,12 +94,12 @@ def get_item():
     uuid = request.args.get("ds")
     if not uuid:
         status = 'INVALID REQUEST, NO UUID'
-        datastory = {}
+        
     else:    
         datastory = getDataStory(uuid)
         if not datastory:
             status = 'DATASTORY NOT FOUND'
-            datastory = {}
+            
         else:
             status = 'OK'
 
@@ -156,6 +156,14 @@ def upload(): #uploaded file from js / react
     print('request.method: ', request.method)
     print('request.remote_addr: ', request.remote_addr)
     # uuid = '6a4a58a2-8777-4cbe-896c-85049a928768' #test
+    if not request.files:
+        return json.dumps('No file')
+    
+    if not 'file' in request.files:
+        return json.dumps('No filename <file> in request')    
+
+    if not request.form.get('uuid'):
+        return json.dumps('No uuid')
 
     uuid = request.form.get('uuid') # unique identifier of the data story
     print("request.form.get('uuid')", uuid)
@@ -179,7 +187,7 @@ def upload(): #uploaded file from js / react
         store = resources + '/video/'
     else:
         json.dumps('Go Home!')
-        exit()
+        # exit()
         
     # https://tedboy.github.io/flask/generated/generated/werkzeug.FileStorage.html
 
