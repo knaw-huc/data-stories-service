@@ -31,14 +31,5 @@ Two conventions:
 
 ### Upload files with Curl
 
-curl --location 'localhost:5000/upload' \
---form 'file=@"/Users/mvdpeet/Desktop/test.wav"' \
---form 'uuid="6a4a58a2-8777-4cbe-896c-85049a928768"'
-
-
-curl --location 'localhost:5000/upload' --form 'file=@"<ABSOLUTE PATH>"' --form 'uuid="<UUID"'
-
-Doesn't always work. Probably more headers needed. Later...
-
-
+    curl  -F "file=@test.mp3;type=audio/mp3" -F uuid=c568ba14-a92f-47e2-b98f-9923d93a80b1 localhost:5000/upload
 

@@ -12,7 +12,8 @@ from werkzeug.utils import secure_filename
 from functions import (
     getNewId, createDataStoryFolder, removeFromDB, 
     deleteDataStoryFolder,getDataStory, fs_tree_to_dict,
-    tooManyStories, createDataFolder, createDataStoriesDB, getDataStoriesDB
+    tooManyStories, createDataFolder, createDataStoriesDB, getDataStoriesDB,
+    getListUUIDs
 )
 # https://peps.python.org/pep-0328/#rationale-for-parentheses
 
@@ -164,10 +165,23 @@ def upload(): #uploaded file from js / react
 
     if not request.form.get('uuid'):
         return json.dumps('No uuid')
+    
+
+    
+        # return json.dumps('uuid not available')
 
     uuid = request.form.get('uuid') # unique identifier of the data story
     print("request.form.get('uuid')", uuid)
- 
+    listUUIDS = getListUUIDs()
+    print(listUUIDS)
+    if not uuid in listUUIDS:
+        print('zit er niet in')
+        return json.dumps('uuid not available')
+
+    # if not uuid in listUUIDS:
+    #     return json.dumps('uuid not available')
+
+
     uploaded_file = request.files['file'] # this is a datastorage object, not the data itself
     filename =  request.files['file'].filename
 

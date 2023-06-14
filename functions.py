@@ -62,6 +62,20 @@ def getDataStoriesDB():
     return struct
 
 
+def getListUUIDs():
+    data = 'data'
+    con = sl.connect(data + '/datastories.db')
+    cur = con.cursor()   
+    sql = "SELECT uuid FROM stories"
+    cur.execute(sql)
+    result = cur.fetchall() # list of tuples
+    res = [ele[0] for ele in result] # list comprehension 
+    print('result', res)
+    
+    return list(res)
+
+
+
 def tooManyStories(max):
     data = 'data/'
  
