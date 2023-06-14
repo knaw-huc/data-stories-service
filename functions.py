@@ -143,17 +143,13 @@ def fs_tree_to_dict(path_):
 
 
 
-def getDataStoryStructure(uuid):
+def getDataStory(uuid):
     data = 'data/'
     directory = data + str(uuid) # misschien niet meer nodig
-    filename = directory + '/story.json'
-    print(filename)
-    struct = {'datastory': 'not yet'}
-    if os.path.isfile(filename):
+    filename = directory + '/datastory.json'
+    # print(filename)
+    datastory = {}
+    if os.path.exists(filename):
         with open(filename) as json_file:
-            struct = json.load(json_file)
-    if os.path.exists(directory):
-        datastory = {"uuid": uuid, "structure" : struct}
-        return datastory
-    else:
-        return False
+            datastory = json.load(json_file)
+    return datastory
