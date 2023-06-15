@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file, jsonify, abort
 import json
 from elastic_index import Index
 import requests
@@ -41,23 +41,29 @@ def before_first_request():
     createDataStoriesDB()
     # app.logger.info("before_first_request")
 
-@app.after_request
-def after_request(response):
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Headers'] = '*'
-    response.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'
-    response.headers['Content-type'] = 'application/json'
-    return response
+
+
+# @app.after_request
+# def after_request(response):
+
+    
+#     response.headers['Access-Control-Allow-Origin'] = '*'
+#     response.headers['Access-Control-Allow-Headers'] = '*'
+#     response.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'
+#     response.headers['Content-type'] = 'application/json'
+#     return response
+
 
 @app.route("/")
 def hello_world():
     retStruc = {"app": "Data Stories Slurf=", "version": "0.1"}
-    return json.dumps(retStruc)
+    # jsonHeaders(response)
+    return jsonify(retStruc)
 
 @app.route("/browse")
 def browse():
     ret_struc = index.browse()
-    return json.dumps(ret_struc)
+    return jsonify(ret_struc)
 
 @app.route("/create_new")
 def create_new():
@@ -65,14 +71,14 @@ def create_new():
     max = 100 # maximaal 100 datastories
     if tooManyStories(max):
         response = {"status": 'ff aan de rem getrokken'}
-        return json.dumps(response)        
+        return jsonify(response)        
 
     id = getNewId()
     status = createDataStoryFolder(id) # plus sub directories, hoef geen json file aan te maken
     if status == True:
         # stringie = 'I created something new! De unieke id is: ' + str(id)
         response = {"datastory_id": id}
-        return json.dumps(response)
+        return jsonify(response)
 
 @app.route("/delete" , methods=['GET'])
 def delete():
@@ -85,7 +91,7 @@ def delete():
 
     removeFromDB(id) # nog even goed naar kijken of dit nu klopt 
     response = {"status": status}
-    return json.dumps(response)
+    return jsonify(response)
 
 # datastory is de inhoud van de json file, ik hoef geen structuur te parsen
 @app.route("/get_item", methods=['GET'] )
@@ -106,7 +112,7 @@ def get_item():
 
     print('ds', datastory)        
     response = {"status": status, "datastory": datastory}
-    return json.dumps(response)
+    return jsonify(response)
 
 
 # hier moet de sqllite database bevraagd worden, om de lijstpagina te genereren
@@ -120,7 +126,7 @@ def getDataStories():
     structure = getDataStoriesDB()
 
     response = {"status": status, "structure": structure}
-    return json.dumps(response)
+    return jsonify(response)
 
 
 @app.route("/update_datastory", methods=['POST'])
@@ -133,9 +139,19 @@ def updateDataStory():
     # print(datastory_id, type(datastory_id))
     path = "data/" + str(datastory_id) + "/datastory.json"
     # print(path)
+
+    
+
+
+
     with open(path, 'w') as f:
         json.dump(datastory, f)
-    return json.dumps(datastory)
+
+    # if not exists(path):
+    #     return jsonify("description does not exist")        
+    
+    # else: 
+    return jsonify(datastory)
     # return
 
 
@@ -158,13 +174,13 @@ def upload(): #uploaded file from js / react
     print('request.remote_addr: ', request.remote_addr)
     # uuid = '6a4a58a2-8777-4cbe-896c-85049a928768' #test
     if not request.files:
-        return json.dumps('No file')
+        return jsonify('No file')
     
     if not 'file' in request.files:
-        return json.dumps('No filename <file> in request')    
+        return jsonify('No filename <file> in request')    
 
     if not request.form.get('uuid'):
-        return json.dumps('No uuid')
+        return jsonify('No uuid')
     
 
     
@@ -176,7 +192,7 @@ def upload(): #uploaded file from js / react
     print(listUUIDS)
     if not uuid in listUUIDS:
         print('zit er niet in')
-        return json.dumps('uuid not available')
+        return jsonify('uuid not available')
 
     # if not uuid in listUUIDS:
     #     return json.dumps('uuid not available')
@@ -200,7 +216,7 @@ def upload(): #uploaded file from js / react
     elif content_type.startswith('video'):    
         store = resources + '/video/'
     else:
-        json.dumps('Go Home!')
+        jsonify('Go Home!')
         # exit()
         
     # https://tedboy.github.io/flask/generated/generated/werkzeug.FileStorage.html
@@ -215,7 +231,24 @@ def upload(): #uploaded file from js / react
     else:
         status = "NOT OK"  
 
-    return json.dumps(status)
+    return jsonify(status)
+
+@app.route('/<uuid>/<resourcetype>/<filename>', methods = ['GET']) 
+def resources(uuid, resourcetype, filename):
+    # we can severe the api from the real path, safer I think
+    # TODO checks and balances maybe 
+
+    filepath = 'data/' + uuid + '/resources/' + resourcetype + '/' + filename
+    # TODO mime-types? Or does send_file this..
+    try:
+        return send_file(filepath)
+    except FileNotFoundError:
+        abort(404)
+    
+    # # read from file serve right mimetype
+    # print(filepath)
+    # status = 'OK'
+    # return json.dumps(status)
 
 
 #Start main program
