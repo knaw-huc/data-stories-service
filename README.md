@@ -22,11 +22,11 @@ http://localhost:5000/get_data_stories
 
 Obtain media:
 
-http://localhost:5000/c568ba14-a92f-47e2-b98f-9923d93a80b1/images/<imageName.ext>
+http://localhost:5000/<uuid>/images/<imageName.ext>
 
-http://localhost:5000/c568ba14-a92f-47e2-b98f-9923d93a80b1/video/<videoName.ext>
+http://localhost:5000/<uuid>/video/<videoName.ext>
 
-http://localhost:5000/c568ba14-a92f-47e2-b98f-9923d93a80b1/audio/<audioName.ext>
+http://localhost:5000/<uuid>/audio/<audioName.ext>
 
 
 
@@ -56,5 +56,5 @@ Two conventions:
  
 Example:
 
-    curl  -F "file=@test.mp3;type=audio/mp3" -F uuid=c568ba14-a92f-47e2-b98f-9923d93a80b1 localhost:5000/upload
+    curl  -F "file=@test.mp3;type=audio/mp3" -F uuid=<uuid> localhost:5000/upload
 
