@@ -99,13 +99,14 @@ def get_item():
     status = ''
     datastory = {}
     uuid = request.args.get("ds")
+    print('uuid', uuid)
     if not uuid:
         status = 'INVALID REQUEST, NO UUID'
         
     else:    
-        datastory = getDataStory(uuid)
+        datastory = getDataStory(uuid) # empty
         if not datastory:
-            status = 'DATASTORY NOT FOUND'
+            status = 'DATASTORY EMPTY'
             
         else:
             status = 'OK'
