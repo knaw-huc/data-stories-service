@@ -13,7 +13,7 @@ from functions import (
     getNewId, createDataStoryFolder, removeFromDB, 
     deleteDataStoryFolder,getDataStory, fs_tree_to_dict,
     tooManyStories, createDataFolder, createDataStoriesDB, getDataStoriesDB,
-    getListUUIDs
+    getListUUIDs, updateModifiedDate
 )
 # https://peps.python.org/pep-0328/#rationale-for-parentheses
 
@@ -104,12 +104,8 @@ def get_item():
         status = 'INVALID REQUEST, NO UUID'
         
     else:    
-        datastory = getDataStory(uuid) # empty
-        if not datastory:
-            status = 'DATASTORY EMPTY'
-            
-        else:
-            status = 'OK'
+        datastory = getDataStory(uuid) # kan empty zijn
+        status = 'OK'
 
     print('ds', datastory)        
     response = {"status": status, "datastory": datastory}
@@ -141,10 +137,6 @@ def updateDataStory():
     path = "data/" + str(datastory_id) + "/datastory.json"
     # print(path)
 
-    
-
-
-
     with open(path, 'w') as f:
         json.dump(datastory, f)
 
@@ -152,6 +144,9 @@ def updateDataStory():
     #     return jsonify("description does not exist")        
     
     # else: 
+
+    updateModifiedDate(datastory_id)
+
     return jsonify(datastory)
     # return
 
