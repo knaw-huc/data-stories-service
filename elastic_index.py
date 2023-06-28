@@ -83,7 +83,6 @@ class Index:
 
 
     def browse(self):
-
         response = self.client.search(
             index="ds",
             body={ "query": {
