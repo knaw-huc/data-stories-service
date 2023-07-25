@@ -131,29 +131,17 @@ def getDataStories():
 
 @app.route("/update_datastory", methods=['POST'])
 def updateDataStory():
+    data = request.json
 
-    datastory_id = request.get_json().get('datastory_id')
-    datastory = request.get_json().get('datastory')
+    datastory_id = data.get('datastory_id')
+    datastory = data.get('datastory')
 
     # save the content to file
-    # print(datastory_id, type(datastory_id))
     path = "data/" + str(datastory_id) + "/datastory.json"
-    # print(path)
-
-    
-
-
-
     with open(path, 'w') as f:
         json.dump(datastory, f)
 
-    # if not exists(path):
-    #     return jsonify("description does not exist")        
-    
-    # else: 
     return jsonify(datastory)
-    # return
-
 
 # ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
@@ -166,7 +154,6 @@ def upload(): #uploaded file from js / react
     # print('request', request)
     print('request.files: ', request.files)
     print('request.headers: ', request.headers)
-    # print('request.data', request.data)
     print('request.args: ', request.args)
     print('request.form: ', request.form)
     print('request.endpoint: ', request.endpoint)
@@ -183,8 +170,6 @@ def upload(): #uploaded file from js / react
         return jsonify('No uuid')
     
 
-    
-        # return json.dumps('uuid not available')
 
     uuid = request.form.get('uuid') # unique identifier of the data story
     print("request.form.get('uuid')", uuid)
@@ -194,8 +179,6 @@ def upload(): #uploaded file from js / react
         print('zit er niet in')
         return jsonify('uuid not available')
 
-    # if not uuid in listUUIDS:
-    #     return json.dumps('uuid not available')
 
 
     uploaded_file = request.files['file'] # this is a datastorage object, not the data itself

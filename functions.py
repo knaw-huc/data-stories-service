@@ -93,8 +93,8 @@ def getNewId():
     # print('ideetje', ideetje)
     con = sl.connect(datadir + '/datastories.db')
     cur = con.cursor()   
-    sql = 'INSERT INTO stories (status, uuid) values(?, ?)'
-    value = ('x', ideetje)        
+    sql = "INSERT INTO stories (status, uuid, owner, title, groep, created) values(?, ?, ?, ?, ?, datetime('now'))"
+    value = ('D', ideetje, 'Rob Zeeman', 'New data story', 'HuC')
     cur.execute(sql, value)
     con.commit()
     # id = con.lastrowid #werkt niet bij deze
