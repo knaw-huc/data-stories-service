@@ -1,6 +1,6 @@
 # DATA STORIES
 
-The development of the backend of Data Stories
+The `backend` of Data Stories
 
 ## API examples, exchange de UID's by the one u create
 
@@ -10,27 +10,30 @@ http://localhost:5000/create_new
 
 Delete data story:
 
-http://localhost:5000/delete?ds=6a4a58a2-8777-4cbe-896c-85049a928768
+http://localhost:5000/delete?ds=<uuid>
 
 Get a data story:
 
-http://localhost:5000/get_item?ds=6a4a58a2-8777-4cbe-896c-85049a928768
+http://localhost:5000/get_item?ds=<uuid>
 
-List of all data stories
+List of all data stories:
 
 http://localhost:5000/get_data_stories
 
 Obtain media:
 
-http://localhost:5000/c568ba14-a92f-47e2-b98f-9923d93a80b1/images/abc.jpg
-http://localhost:5000/c568ba14-a92f-47e2-b98f-9923d93a80b1/video/test.mp4
-http://localhost:5000/c568ba14-a92f-47e2-b98f-9923d93a80b1/audio/test.mp3
+http://localhost:5000/<uuid>/images/<imageName.ext>
+
+http://localhost:5000/<uuid>/video/<videoName.ext>
+
+http://localhost:5000/<uuid>/audio/<audioName.ext>
 
 
 
 ### Upload files with webform
 
 Open `test.html` adapt the uuid in the hidden field. Use it.
+
 
 ### Upload files test with Postman
 
@@ -45,7 +48,13 @@ Two conventions:
 
 ![Postman example](postman.png)
 
+
 ### Upload files with Curl
 
-    curl  -F "file=@test.mp3;type=audio/mp3" -F uuid=c568ba14-a92f-47e2-b98f-9923d93a80b1 localhost:5000/upload
+    curl  -F "file=@<name.ext>;type=<mimetype>" -F uuid=<uuid> localhost:5000/upload
+
+ 
+Example:
+
+    curl  -F "file=@test.mp3;type=audio/mp3" -F uuid=<uuid> localhost:5000/upload
 

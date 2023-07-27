@@ -3,6 +3,8 @@ import json
 import os
 import shutil
 import uuid
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 def createDataFolder():
     data = 'data/'
@@ -21,28 +23,33 @@ def createDataStoriesDB():
             CREATE TABLE IF NOT EXISTS stories (
                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                 uuid TEXT,
-                status TEXT,
+                status TEXT DEFAULT 'draft',
                 owner TEXT,
                 filename TEXT,
                 created TEXT,
                 modified TEXT,
                 store TEXT,
-                title TEXT,
-                groep TEXT
+                title TEXT
             );
         """) 
     con.commit()
+    cur.close()
+    con.close()    
 
 
 def getDataStoriesDB():
     data = 'data'
     con = sl.connect(data + '/datastories.db')
     cur = con.cursor()   
-    sql = "SELECT * FROM stories"
+    sql = "SELECT uuid, title, status, created, modified, owner FROM stories"
     cur.execute(sql)
     names = list(map(lambda x: x[0], cur.description)) # ergens opgezocht
     print('names', names)
     result = cur.fetchall()
+
+    cur.close()
+    con.close()
+
     print('result', result)
     struct = []
     for x in result:
@@ -72,6 +79,9 @@ def getListUUIDs():
     res = [ele[0] for ele in result] # list comprehension 
     print('result', res)
     
+    cur.close()
+    con.close()
+
     return list(res)
 
 
@@ -89,15 +99,25 @@ def tooManyStories(max):
 def getNewId():
     # maakt gebruik van een sql lite database voor gegarandeerde oplopende unieke ids 
     datadir = 'data'
-    ideetje = str(uuid.uuid4()) # kan misschien ook als database functie
+    unique_id = str(uuid.uuid4()) # kan misschien ook als database functie
+    status = 'draft' # dubbelop?
+    title = '[UNTITLED]'
+    now = datetime.now(tz=ZoneInfo("Europe/Amsterdam"))
+    created = now.strftime("%Y-%m-%d %H:%M:%S")    # creation timestamp
+    print('datestring',created)
+    # YYYY-MM-DD hh:mm:ss' 
+
+    # datum = 
     # print('ideetje', ideetje)
     con = sl.connect(datadir + '/datastories.db')
     cur = con.cursor()   
-    sql = "INSERT INTO stories (status, uuid, owner, title, groep, created) values(?, ?, ?, ?, ?, datetime('now'))"
-    value = ('D', ideetje, 'Rob Zeeman', 'New data story', 'HuC')
+
+    sql = "INSERT INTO stories (status, uuid, owner, title, groep, created, modified) values(?, ?, ?, ?, ?, datetime('now'), datetime('now'))"
+    value = ('D', unique_id, 'Rob Zeeman', 'New data story', 'HuC')
+
     cur.execute(sql, value)
     con.commit()
-    # id = con.lastrowid #werkt niet bij deze
+    # id = con.lastrowid #werkt niet bij deze versie van sqllite
     res = cur.execute("SELECT last_insert_rowid()")
     con.commit()
     id = res.fetchone()
@@ -107,6 +127,10 @@ def getNewId():
     cur.execute(sql, value)
     con.commit()
     result = res.fetchall()
+
+    cur.close()
+    con.close()
+
     # print('result', result)
     return result[0][1]
 
@@ -138,12 +162,30 @@ def deleteDataStoryFolder(uuid):
 def removeFromDB(uuid):
     con = sl.connect('data/datastories.db')
     cur = con.cursor()
-    sql = 'DELETE FROM stories WHERE uuid = ?'
+    sql = 'DELETE FROM stories WHERE uuid = ? LIMIT 1 '
     cur.execute(sql, (uuid,))
     con.commit()
+
+    cur.close()
+    con.close()
+
     return True
 
-
+def updateModifiedDate(unique_id):
+    datadir = 'data'
+    now = datetime.now(tz=ZoneInfo("Europe/Amsterdam"))
+    modified = now.strftime("%Y-%m-%d %H:%M:%S")    # creation timestamp
+    con = sl.connect(datadir + '/datastories.db')
+    cur = con.cursor()   
+    sql = 'UPDATE stories SET modified = ? WHERE uuid = ? LIMIT 1 '
+    value = (modified, unique_id)        
+    cur.execute(sql, value)
+    con.commit()
+    # best practice https://stackoverflow.com/questions/5504340/python-mysqldb-connection-close-vs-cursor-close
+    cur.close()
+    con.close()
+  
+    
 
 def fs_tree_to_dict(path_):
     file_token = ''
@@ -161,7 +203,7 @@ def getDataStory(uuid):
     data = 'data/'
     directory = data + str(uuid) # misschien niet meer nodig
     filename = directory + '/datastory.json'
-    # print(filename)
+    print(filename)
     datastory = {}
     if os.path.exists(filename):
         with open(filename) as json_file:
