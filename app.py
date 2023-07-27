@@ -109,7 +109,7 @@ def get_item():
 
     print('ds', datastory)        
     response = {"status": status, "datastory": datastory}
-    return jsonify(response)
+    return jsonify(datastory)
 
 
 # hier moet de sqllite database bevraagd worden, om de lijstpagina te genereren

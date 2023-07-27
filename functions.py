@@ -41,7 +41,7 @@ def getDataStoriesDB():
     data = 'data'
     con = sl.connect(data + '/datastories.db')
     cur = con.cursor()   
-    sql = "SELECT uuid, title, status, created, modified, owner FROM stories"
+    sql = "SELECT uuid, title, status, created, modified, owner, groep FROM stories"
     cur.execute(sql)
     names = list(map(lambda x: x[0], cur.description)) # ergens opgezocht
     print('names', names)
@@ -113,7 +113,7 @@ def getNewId():
     cur = con.cursor()   
 
     sql = "INSERT INTO stories (status, uuid, owner, title, groep, created, modified) values(?, ?, ?, ?, ?, datetime('now'), datetime('now'))"
-    value = ('D', unique_id, 'Rob Zeeman', 'New data story', 'HuC')
+    value = ('D', unique_id, 'Rob Zeeman', title, 'HuC')
 
     cur.execute(sql, value)
     con.commit()
