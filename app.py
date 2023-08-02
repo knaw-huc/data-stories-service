@@ -7,13 +7,14 @@ import sqlite3 as sl
 import os
 from os.path import isfile, join, exists
 from werkzeug.utils import secure_filename
+from ds_template import template
 
 
 from functions import (
     getNewId, createDataStoryFolder, removeFromDB, 
     deleteDataStoryFolder,getDataStory, fs_tree_to_dict,
     tooManyStories, createDataFolder, createDataStoriesDB, getDataStoriesDB,
-    getListUUIDs, updateModifiedDate
+    getListUUIDs, updateModifiedDate, saveDataStory
 )
 # https://peps.python.org/pep-0328/#rationale-for-parentheses
 
@@ -74,7 +75,7 @@ def create_new():
         return jsonify(response)        
 
     id = getNewId()
-    status = createDataStoryFolder(id) # plus sub directories, hoef geen json file aan te maken
+    status = createDataStoryFolder(id, template)
     if status == True:
         # stringie = 'I created something new! De unieke id is: ' + str(id)
         response = {"datastory_id": id}
@@ -131,18 +132,20 @@ def updateDataStory():
     data = request.json
 
     datastory_id = data.get('datastory_id')
+    datastory_title = data.get('datastory_title')
     datastory = data.get('datastory')
 
     # save the content to file
-    path = "data/" + str(datastory_id) + "/datastory.json"
+    #path = "data/" + str(datastory_id) + "/datastory.json"
 
-    with open(path, 'w') as f:
-        json.dump(datastory, f)
+    #with open(path, 'w') as f:
+    #    json.dump(datastory, f)
+    saveDataStory(datastory_id, datastory)
 
 
-    updateModifiedDate(datastory_id)
+    updateModifiedDate(datastory_id, datastory_title)
 
-    return jsonify(datastory)
+    return jsonify({"status": "OK"});
 
 # ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 

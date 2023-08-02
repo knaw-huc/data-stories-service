@@ -6,6 +6,7 @@ import uuid
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
+
 def createDataFolder():
     data = 'data/'
     if not os.path.exists(data):
@@ -134,7 +135,7 @@ def getNewId():
     # print('result', result)
     return result[0][1]
 
-def createDataStoryFolder(id):
+def createDataStoryFolder(id, template):
     # misschien ook een eens hiernaar kijken https://stackoverflow.com/questions/273192/how-do-i-create-a-directory-and-any-missing-parent-directories
     # os.path kan wel eens misgaan begrijp ik
     data = 'data/'
@@ -145,6 +146,7 @@ def createDataStoryFolder(id):
         os.makedirs(directory + '/resources/images/')
         os.makedirs(directory + '/resources/audio/')
         os.makedirs(directory + '/resources/video/')
+        saveDataStory(id, template)
 
     return True
 
@@ -171,14 +173,14 @@ def removeFromDB(uuid):
 
     return True
 
-def updateModifiedDate(unique_id):
+def updateModifiedDate(unique_id, title):
     datadir = 'data'
     now = datetime.now(tz=ZoneInfo("Europe/Amsterdam"))
     modified = now.strftime("%Y-%m-%d %H:%M:%S")    # creation timestamp
     con = sl.connect(datadir + '/datastories.db')
     cur = con.cursor()   
-    sql = 'UPDATE stories SET modified = ? WHERE uuid = ? LIMIT 1 '
-    value = (modified, unique_id)        
+    sql = 'UPDATE stories SET title = ?, modified = ? WHERE uuid = ? LIMIT 1 '
+    value = (title, modified, unique_id)
     cur.execute(sql, value)
     con.commit()
     # best practice https://stackoverflow.com/questions/5504340/python-mysqldb-connection-close-vs-cursor-close
@@ -203,9 +205,14 @@ def getDataStory(uuid):
     data = 'data/'
     directory = data + str(uuid) # misschien niet meer nodig
     filename = directory + '/datastory.json'
-    print(filename)
     datastory = {}
     if os.path.exists(filename):
         with open(filename) as json_file:
             datastory = json.load(json_file)
     return datastory
+
+def saveDataStory(datastory_id, datastory):
+    path = "data/" + str(datastory_id) + "/datastory.json"
+
+    with open(path, 'w') as f:
+        json.dump(datastory, f)
