@@ -5,13 +5,23 @@ import shutil
 import uuid
 from datetime import datetime
 from zoneinfo import ZoneInfo
+from urllib.parse import urlparse
+
+import requests
 
 
 def createDataFolder():
     data = 'data/'
     if not os.path.exists(data):
         os.makedirs(data)
-    return True    
+    return True
+
+def uri_validator(x):
+    try:
+        result = requests.head(x)
+        return result.status_code;
+    except:
+        return 0
 
 def createDataStoriesDB():
     data = 'data'

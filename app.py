@@ -14,7 +14,7 @@ from functions import (
     getNewId, createDataStoryFolder, removeFromDB, 
     deleteDataStoryFolder,getDataStory, fs_tree_to_dict,
     tooManyStories, createDataFolder, createDataStoriesDB, getDataStoriesDB,
-    getListUUIDs, updateModifiedDate, saveDataStory
+    getListUUIDs, updateModifiedDate, saveDataStory, uri_validator
 )
 # https://peps.python.org/pep-0328/#rationale-for-parentheses
 
@@ -65,6 +65,14 @@ def hello_world():
 def browse():
     ret_struc = index.browse()
     return jsonify(ret_struc)
+
+@app.route("/check_url", methods=['POST'])
+def check_url():
+    data = request.json
+    url = data.get("url")
+    result = uri_validator(url)
+    return jsonify({"status": result})
+
 
 @app.route("/create_new")
 def create_new():
