@@ -164,21 +164,24 @@ def updateDataStory():
 @app.route('/upload', methods = ['POST', 'OPTIONS']) 
 def upload(): #uploaded file from js / react
     # print('request', request)
-    print('request.files: ', request.files)
-    print('request.headers: ', request.headers)
-    print('request.args: ', request.args)
-    print('request.form: ', request.form)
-    print('request.endpoint: ', request.endpoint)
-    print('request.method: ', request.method)
-    print('request.remote_addr: ', request.remote_addr)
+    # print('request.files: ', request.files)
+    # print('request.headers: ', request.headers)
+    # print('request.args: ', request.args)
+    # print('request.form: ', request.form)
+    # print('request.endpoint: ', request.endpoint)
+    # print('request.method: ', request.method)
+    # print('request.remote_addr: ', request.remote_addr)
     # uuid = '6a4a58a2-8777-4cbe-896c-85049a928768' #test
     if not request.files:
+        print("No file")
         return jsonify('No file')
     
     if not 'file' in request.files:
+        print('No filename <file> in request')
         return jsonify('No filename <file> in request')    
 
     if not request.form.get('uuid'):
+        print('No uuid')
         return jsonify('No uuid')
     
 
