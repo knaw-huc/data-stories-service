@@ -14,17 +14,17 @@ template = {
             "xml:lang": "en"
         },
         "ds:Metadata": {
-            "dct:title": {"_text": "New data story"},
+            "dct:title": [{"_text": ""}],
             "dct:creator": [
-                {"_text": "Rob Zeeman"}
+                {"_text": ""}
             ],
-            "dct:license": {"_text": "http://creativecommons.org/licenses/by-sa/4.0/"},
+            "dct:license": [{"_text": "http://creativecommons.org/licenses/by-sa/4.0/"}],
             "_comment": [
                 " NOTE: any Dublin Core term https://www.dublincore.org/specifications/dublin-core/dcmi-terms/ ",
                 " TODO: some more standard DS metadata elements? "
             ],
-            "ds:LandingPage": {"_text": ""},
-            "ds:Endpoint": {"_text": ""}
+            "ds:LandingPage": [{"_text": ""}],
+            "ds:Endpoint": [{"_text": ""}]
         },
         "ds:Story": {
             "ds:Block": []
