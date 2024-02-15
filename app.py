@@ -108,7 +108,7 @@ def get_item():
     status = ''
     datastory = {}
     uuid = request.args.get("ds")
-    print('uuid', uuid)
+    #print('uuid', uuid)
     if not uuid:
         status = 'INVALID REQUEST, NO UUID'
         
@@ -116,7 +116,7 @@ def get_item():
         datastory = getDataStory(uuid) # kan empty zijn
         status = 'OK'
 
-    print('ds', datastory)        
+    #print('ds', datastory)
     response = {"status": status, "datastory": datastory}
     return jsonify(datastory)
 
@@ -187,11 +187,11 @@ def upload(): #uploaded file from js / react
 
 
     uuid = request.form.get('uuid') # unique identifier of the data story
-    print("request.form.get('uuid')", uuid)
+    #print("request.form.get('uuid')", uuid)
     listUUIDS = getListUUIDs()
     print(listUUIDS)
     if not uuid in listUUIDS:
-        print('zit er niet in')
+        # print('zit er niet in')
         return jsonify('uuid not available')
 
 
@@ -199,8 +199,8 @@ def upload(): #uploaded file from js / react
     uploaded_file = request.files['file'] # this is a datastorage object, not the data itself
     filename =  request.files['file'].filename
 
-    print("request.files['file'].filename: ", request.files['file'].filename)
-    print("request.files['file'].content_type: ", request.files['file'].content_type)
+    #print("request.files['file'].filename: ", request.files['file'].filename)
+    #print("request.files['file'].content_type: ", request.files['file'].content_type)
 
     # filename = uploaded_file.filename
     content_type = request.files['file'].content_type
