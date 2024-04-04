@@ -53,7 +53,7 @@ WHERE {
     }
   }
   BIND(xsd:float(?occ_n)/xsd:float(?deceased_n) * 100 as ?occshare)
-  BIND(concat('reds,', (?occshare/ 100)) as ?wktColor)
+  BIND(concat('crimson,', (?occshare/ 100)) as ?wktColor)
   BIND(concat(substr(STR(?occshare), 0, 4),'%_', STRAFTER(STR(?gg_gemeente), 'gemeentenaam/')) as ?wktTooltip)
 }
 ORDER BY ASC (?amco)

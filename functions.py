@@ -19,7 +19,7 @@ def createDataFolder():
 def uri_validator(x):
     try:
         result = requests.head(x)
-        return result.status_code;
+        return result.status_code
     except:
         return 0
 

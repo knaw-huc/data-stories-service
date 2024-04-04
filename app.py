@@ -44,15 +44,13 @@ def before_first_request():
 
 
 
-# @app.after_request
-# def after_request(response):
-
-    
-#     response.headers['Access-Control-Allow-Origin'] = '*'
-#     response.headers['Access-Control-Allow-Headers'] = '*'
-#     response.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'
-#     response.headers['Content-type'] = 'application/json'
-#     return response
+@app.after_request
+def after_request(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Headers'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'
+    response.headers['Content-type'] = 'application/json'
+    return response
 
 
 @app.route("/")
@@ -189,7 +187,7 @@ def upload(): #uploaded file from js / react
     uuid = request.form.get('uuid') # unique identifier of the data story
     #print("request.form.get('uuid')", uuid)
     listUUIDS = getListUUIDs()
-    print(listUUIDS)
+    # print(listUUIDS)
     if not uuid in listUUIDS:
         # print('zit er niet in')
         return jsonify('uuid not available')
