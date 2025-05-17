@@ -48,11 +48,77 @@ def createDataStoriesDB():
     con.close()    
 
 
-def getDataStoriesDB():
+def getDataStorySettings(id):
     data = 'data'
     con = sl.connect(data + '/datastories.db')
-    cur = con.cursor()   
-    sql = "SELECT uuid, title, status, created, modified, owner, groep FROM stories"
+    cur = con.cursor()
+    sql = "SELECT status, title FROM stories WHERE uuid = '" + id + "'"
+    cur.execute(sql)
+    names = list(map(lambda x: x[0], cur.description)) # ergens opgezocht
+    result = cur.fetchall()
+    cur.close()
+    con.close()
+
+    struct = []
+    for x in result:
+        row = {}
+    # namen in het resultaat plakken y is een rangnummer in de namenlijst
+        for y in range(0, len(names)):
+            key = names[y]
+            value = x[y]
+            row[key] = value
+        # s.append({key: value})
+
+            struct.append(row)
+    struct[0]["rights"] = getStoryRights(id)
+    return struct[0]
+
+def getStoryRights(id):
+    data = 'data'
+    con = sl.connect(data + '/datastories.db')
+    cur = con.cursor()
+    sql = "select v.email, v.name, v.eppn, r.rights from rights  r inner join visitors  v on r.eppn = v.eppn where r.story_uuid = '" + id + "'"
+    cur.execute(sql)
+    names = list(map(lambda x: x[0], cur.description)) # ergens opgezocht
+    result = cur.fetchall()
+    con.commit()
+    cur.close()
+    con.close()
+    struct = []
+    for x in result:
+    # print('x', x[1])
+    # id = x[1]
+    # structure.append({'uuid': id})
+        row = {}
+    # namen in het resultaat plakken y is een rangnummer in de namenlijst
+        for y in range(0, len(names)):
+            key = names[y]
+            value = x[y]
+            row[key] = value
+        # s.append({key: value})
+        struct.append(row)
+    return struct
+
+
+def set_status(id, status):
+    data = 'data'
+    con = sl.connect(data + '/datastories.db')
+    cur = con.cursor()
+    sql = "UPDATE stories SET status= '" + status +"' WHERE uuid = '" + id + "'"
+    cur.execute(sql)
+    con.commit()
+    cur.close()
+    con.close()
+    return {"status": "OK"}
+
+def getDataStoriesDB(auth_status):
+    data = 'data'
+    con = sl.connect(data + '/datastories.db')
+    cur = con.cursor()
+    if auth_status["logged_in"] == "yes":
+        sql = "SELECT uuid, title, status, created, modified, owner, groep FROM stories"
+    else:
+        sql = "SELECT uuid, title, status, created, modified, owner, groep FROM stories WHERE status = 'P'"
     cur.execute(sql)
     names = list(map(lambda x: x[0], cur.description)) # ergens opgezocht
     print('names', names)
@@ -62,6 +128,7 @@ def getDataStoriesDB():
     con.close()
 
     print('result', result)
+
     struct = []
     for x in result:
         # print('x', x[1])
@@ -74,7 +141,7 @@ def getDataStoriesDB():
             value = x[y]
             row[key] = value
             # s.append({key: value})
-            
+
         struct.append(row)
     print('struct', struct)
     return struct
@@ -220,6 +287,8 @@ def getDataStory(uuid):
         with open(filename) as json_file:
             datastory = json.load(json_file)
     return datastory
+
+
 
 def saveDataStory(datastory_id, datastory):
     path = "data/" + str(datastory_id) + "/datastory.json"

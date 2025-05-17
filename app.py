@@ -1,6 +1,6 @@
-from flask import Flask, request, jsonify, send_file, jsonify, abort
+from flask import Flask, request, jsonify, send_file, jsonify, abort, session
+
 import json
-from elastic_index import Index
 import requests
 import random
 import sqlite3 as sl
@@ -12,26 +12,23 @@ from ds_template import template
 
 from functions import (
     getNewId, createDataStoryFolder, removeFromDB, 
-    deleteDataStoryFolder,getDataStory, fs_tree_to_dict,
-    tooManyStories, createDataFolder, createDataStoriesDB, getDataStoriesDB,
+    deleteDataStoryFolder,getDataStory, getDataStorySettings, fs_tree_to_dict,
+    tooManyStories, createDataFolder, set_status, createDataStoriesDB, getDataStoriesDB,
     getListUUIDs, updateModifiedDate, saveDataStory, uri_validator
 )
 # https://peps.python.org/pep-0328/#rationale-for-parentheses
 
 
 app = Flask(__name__)
-app.secret_key = "secret key"
+app.secret_key = "bonzo"
 app.config['UPLOAD_FOLDER'] = '/data'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config["SESSION_COOKIE_SAMESITE"] = "None"
+app.config["SESSION_COOKIE_SECURE"] = False
 
 
-config = {
-    "url" : "localhost",
-    "port" : "9200",
-    "doc_type" : "ds"
-}
 
-index = Index(config)
 
 # wordt maar 1 keer gedaan na het opstarten
 @app.before_first_request
@@ -41,7 +38,11 @@ def before_first_request():
     createDataFolder()
     createDataStoriesDB()
     # app.logger.info("before_first_request")
+    session.permanent = False
 
+@app.before_request
+def before_request():
+    session.permanent = False
 
 
 @app.after_request
@@ -55,14 +56,9 @@ def after_request(response):
 
 @app.route("/")
 def hello_world():
-    retStruc = {"app": "Data Stories Slurf=", "version": "0.1"}
+    retStruc = {"app": "Data Stories Service", "version": "0.2"}
     # jsonHeaders(response)
     return jsonify(retStruc)
-
-@app.route("/browse")
-def browse():
-    ret_struc = index.browse()
-    return jsonify(ret_struc)
 
 @app.route("/check_url", methods=['POST'])
 def check_url():
@@ -71,6 +67,16 @@ def check_url():
     result = uri_validator(url)
     return jsonify({"status": result})
 
+@app.route("/settings/", methods=['GET'])
+def settings():
+    id = request.args.get("ds")
+    return jsonify(getDataStorySettings(id))
+
+@app.route('/set_settings', methods=['POST'])
+def set_settings():
+    data = request.json
+    result = set_status(data.get('id'), data.get('status'))
+    return jsonify(result)
 
 @app.route("/create_new")
 def create_new():
@@ -103,33 +109,41 @@ def delete():
 # datastory is de inhoud van de json file, ik hoef geen structuur te parsen
 @app.route("/get_item", methods=['GET'] )
 def get_item():
-    status = ''
+    status = get_auth_status();
     datastory = {}
     uuid = request.args.get("ds")
     #print('uuid', uuid)
     if not uuid:
         status = 'INVALID REQUEST, NO UUID'
-        
-    else:    
+
+    else:
         datastory = getDataStory(uuid) # kan empty zijn
-        status = 'OK'
 
     #print('ds', datastory)
     response = {"status": status, "datastory": datastory}
-    return jsonify(datastory)
+    return jsonify(response)
 
 
 # hier moet de sqllite database bevraagd worden, om de lijstpagina te genereren
-@app.route("/get_data_stories")
+@app.route("/get_data_stories", methods=["GET"])
 def getDataStories():
     structure = {'message': 'nothing yet'}
+
     # data = 'data/'
     status = 'OK'
     # structure = fs_tree_to_dict(data)
     # print(structure)
-    structure = getDataStoriesDB()
-
-    response = {"status": status, "structure": structure}
+    if 'logged_in' in session:
+        logged = session["logged_in"]
+    else:
+        logged = "no"
+    if 'user' in session:
+        user = session["user"]
+    else:
+        user = ""
+    auth_status = get_auth_status()
+    structure = getDataStoriesDB(auth_status)
+    response = {"status": status, "auth": auth_status, "structure": structure}
     return jsonify(response)
 
 
@@ -157,6 +171,12 @@ def updateDataStory():
 
 # def allowed_file(filename):
 # 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/login', methods = ["GET"])
+def login():
+    session['logged_in'] = "yes"
+    session['user'] = "Rob Zeeman"
+    return(jsonify({"status": "ok", "logged_in": session.get('logged_in')}))
 
 
 @app.route('/upload', methods = ['POST', 'OPTIONS']) 
@@ -245,6 +265,10 @@ def resources(uuid, resourcetype, filename):
     # print(filepath)
     # status = 'OK'
     # return json.dumps(status)
+
+def get_auth_status():
+    return {"logged_in": "yes", "user": "Rob Zeeman"}
+
 
 
 #Start main program

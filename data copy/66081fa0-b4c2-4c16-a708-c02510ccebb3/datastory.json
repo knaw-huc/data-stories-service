@@ -13,20 +13,12 @@
             "xmlns:ds": "http://example.com/ds/",
             "xmlns:wp4": "https://github.com/CLARIAH/wp4-stories/ns#"
         },
-        "ds:Comments": [
-            {
-                "comment": {"_text": "Rob"},
-                "dct:author": "Rob Zeeman",
-                "dct:date": "Wed Jun 12 2024 11:26:42 GMT+0200 (Central European Summer Time)"
-            }
-        ],
+        "ds:Comments": [],
         "ds:Metadata": {
-            "dct:contributor": [
-                {"_text": "Rob Zeeman"}
-            ],
             "dct:creator": [
                 {"_text": "Roeland Ordelmans"},
-                {"_text": "Mari Wigham"}
+                {"_text": "Mari Wigham"},
+                {"_text": "Rob Zeeman"}
             ],
             "dct:license": [
                 {"_text": "http://creativecommons.org/licenses/by-sa/4.0/"}
@@ -34,6 +26,7 @@
             "dct:title": [
                 {"_text": "15 jaar De Wereld Draait Door in data"}
             ],
+            "ds:Comments": [],
             "ds:Endpoint": [
                 {"_text": "https://www.robzeeman.nl"}
             ],
@@ -57,11 +50,6 @@
                             "comment": {"_text": "rob was hier"},
                             "dct:author": "Rob Zeeman",
                             "dct:date": "Mon Jun 10 2024 12:14:43 GMT+0200 (Central European Summer Time)"
-                        },
-                        {
-                            "comment": {"_text": "En hier"},
-                            "dct:author": "Rob Zeeman",
-                            "dct:date": "Wed Jun 12 2024 11:27:41 GMT+0200 (Central European Summer Time)"
                         }
                     ],
                     "ds:Cues": {
@@ -75,7 +63,11 @@
                         "_comment": "",
                         "dct:title": {"_text": ""}
                     },
-                    "ds:Provenance": []
+                    "ds:Provenance": {
+                        "prov:used": [
+                            {"_text": "Other data stories"}
+                        ]
+                    }
                 },
                 {
                     "_attributes": {
@@ -89,8 +81,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": ""}
-                    },
-                    "ds:Provenance": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -111,8 +102,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": ""}
-                    },
-                    "ds:Provenance": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -133,8 +123,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": "Metadata"}
-                    },
-                    "ds:Provenance": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -148,8 +137,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": ""}
-                    },
-                    "ds:Provenance": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -170,8 +158,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": ""}
-                    },
-                    "ds:Provenance": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -185,8 +172,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": ""}
-                    },
-                    "ds:Provenance": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -207,8 +193,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": ""}
-                    },
-                    "ds:Provenance": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -229,8 +214,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": ""}
-                    },
-                    "ds:Provenance": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -251,8 +235,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": "TV-geschiedenis"}
-                    },
-                    "ds:Provenance": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -288,9 +271,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": ""}
-                    },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -311,9 +292,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": "Distant and close reading"}
-                    },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -327,9 +306,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": ""}
-                    },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -350,9 +327,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": ""}
-                    },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -366,9 +341,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": ""}
-                    },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -389,9 +362,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": ""}
-                    },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -412,9 +383,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": "Data criticism"}
-                    },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -428,9 +397,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": ""}
-                    },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -451,9 +418,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": ""}
-                    },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -474,9 +439,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": "Oerknal"}
-                    },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -490,9 +453,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": ""}
-                    },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -513,9 +474,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": ""}
-                    },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -529,9 +488,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": ""}
-                    },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -552,9 +509,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": ""}
-                    },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -575,9 +530,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": "Sprekende data"}
-                    },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -591,9 +544,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": ""}
-                    },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -614,9 +565,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": ""}
-                    },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -637,9 +586,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": "Matthijs is DWDD"}
-                    },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -653,9 +600,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": ""}
-                    },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -676,9 +621,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": ""}
-                    },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -699,9 +642,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": ""}
-                    },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -722,9 +663,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": "Gekruiste armen"}
-                    },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -738,9 +677,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": ""}
-                    },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -761,9 +698,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": ""}
-                    },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -784,9 +719,7 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": "Werken met de Media Suite"}
-                    },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    }
                 },
                 {
                     "_attributes": {
@@ -807,9 +740,101 @@
                     "ds:Metadata": {
                         "_comment": "",
                         "dct:title": {"_text": "Kritische kijk op data"}
+                    }
+                }
+            ],
+            "ds:block": [
+                {
+                    "_attributes": {
+                        "mime": "text/markdown",
+                        "type": "text",
+                        "xml:id": "749898a1"
                     },
-                    "ds:Provenance": [],
-                    "ds:Providence": []
+                    "_comment": "",
+                    "_text": "**Sinds bekend is dat DWDD stopt, worden overal lijstjes gedeeld, discussies gevoerd en conclusies getrokken over het programma. Vaak op basis van het spreekwoordelijke bierviltje. Zou het ook anders kunnen? Onderzoekers kijken naar patronen in data, in dit geval alle DWDD data opgeslagen in het Beeld en Geluid archief. Kijk mee door de lens van de [Media Suite](https://mediasuite.clariah.nl/\"l) en ontdek wat er zoal valt af te leiden uit 15 seizoenen DWDD als je puur naar de data kijkt.**",
+                    "ds:Cues": {
+                        "_comment": [],
+                        "ds:title-prologue": {
+                            "_attributes": {"type": "template"},
+                            "_text": "# I. {$ds-Block/dct:title}"
+                        }
+                    },
+                    "ds:Metadata": {
+                        "_comment": "",
+                        "dct:title": {"_text": ""}
+                    }
+                },
+                {
+                    "_attributes": {
+                        "href": "https://mediasuitedatastories.clariah.nl/e5add4c57b5a69156c2cb6e3884769d3/15jaarmvn-8fps-large.gif",
+                        "mime": "image/*",
+                        "type": "media",
+                        "xml:id": "c9d04060"
+                    },
+                    "_comment": "",
+                    "ds:Metadata": {
+                        "_comment": "",
+                        "dct:title": {"_text": ""}
+                    }
+                },
+                {
+                    "_attributes": {
+                        "href": "https://www.youtube.com/embed/sw_LpINt8lk?si=1whltp5b3ZVeBL08",
+                        "mime": "text/html",
+                        "type": "media",
+                        "xml:id": "3bfe2e14"
+                    },
+                    "_comment": "",
+                    "ds:Metadata": {
+                        "_comment": "",
+                        "dct:title": {"_text": "Zappa was never invited"}
+                    }
+                },
+                {
+                    "_attributes": {
+                        "href": "https://public.flourish.studio/visualisation/1925837/embed",
+                        "mime": "text/html",
+                        "type": "media",
+                        "xml:id": "b61913bd"
+                    },
+                    "_comment": "",
+                    "ds:Metadata": {
+                        "_comment": "",
+                        "dct:title": {"_text": "Locaties als onderwerp"}
+                    }
+                },
+                {
+                    "_attributes": {
+                        "mime": "text/markdown",
+                        "type": "text",
+                        "xml:id": "deea1e54"
+                    },
+                    "_comment": "",
+                    "_text": "Voorbeelden van grensoverschrijdend gedrag die uit het rapport naar voren komen zijn roddelen, belachelijk maken, het schenden van vertrouwelijkheid, verbaal geweld, verbale intimidatie van vrouwelijke collega's en discriminatie op basis van geslacht, leeftijd, etniciteit of huidskleur.",
+                    "ds:Cues": {
+                        "_comment": [],
+                        "ds:title-prologue": {
+                            "_attributes": {"type": "template"},
+                            "_text": "# I. {$ds-Block/dct:title}"
+                        }
+                    },
+                    "ds:Metadata": {
+                        "_comment": "",
+                        "dct:title": {"_text": "Het was niet altijd feest"}
+                    }
+                },
+                {
+                    "_attributes": {
+                        "href": "http://localhost:5000/66081fa0-b4c2-4c16-a708-c02510ccebb3/images/1956-GM-Firebird-II-1-lg.jpg",
+                        "mime": "image/*",
+                        "type": "media",
+                        "xml:id": "8b463bbb"
+                    },
+                    "_comment": "",
+                    "ds:Metadata": {
+                        "_comment": "",
+                        "dct:title": {"_text": "Dit is zijn nieuwe auto"}
+                    }
                 }
             ]
         }
