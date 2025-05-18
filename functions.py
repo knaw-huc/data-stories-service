@@ -45,14 +45,44 @@ def createDataStoriesDB():
         """) 
     con.commit()
     cur.close()
-    con.close()    
+    con.close()
+
+def get_setting_users(uuid, eppn):
+    sql = "select v.email, v.eppn from visitors v where v.eppn not in (select r.eppn from rights r where story_uuid ='" + uuid +"') and v.eppn is not '" + eppn + "' order by email"
+    result = fetch_data(sql)
+    return result
+
+def fetch_data(sql):
+    data = 'data'
+    con = sl.connect(data + '/datastories.db')
+    cur = con.cursor()
+    cur.execute(sql)
+    names = list(map(lambda x: x[0], cur.description)) # ergens opgezocht
+    #print(names)
+    result = cur.fetchall()
+    cur.close()
+    con.close()
+    #print(result)
+
+    struct = []
+    for x in result:
+        row = {}
+        # namen in het resultaat plakken y is een rangnummer in de namenlijst
+        for y in range(0, len(names)):
+            key = names[y]
+            value = x[y]
+            row[key] = value
+            # s.append({key: value})
+
+        struct.append(row)
+    return struct
 
 
 def getDataStorySettings(id):
     data = 'data'
     con = sl.connect(data + '/datastories.db')
     cur = con.cursor()
-    sql = "SELECT status, title FROM stories WHERE uuid = '" + id + "'"
+    sql = "SELECT status, title, uuid FROM stories WHERE uuid = '" + id + "'"
     cur.execute(sql)
     names = list(map(lambda x: x[0], cur.description)) # ergens opgezocht
     result = cur.fetchall()
@@ -69,9 +99,14 @@ def getDataStorySettings(id):
             row[key] = value
         # s.append({key: value})
 
-            struct.append(row)
+        struct.append(row)
     struct[0]["rights"] = getStoryRights(id)
     return struct[0]
+
+def add_user_rights(uuid, eppn):
+    sql = "INSERT INTO rights (story_uuid, eppn, rights) VALUES ('" + uuid +"', '" + eppn + "', 'R----')"
+    result = fetch_data(sql)
+    return result;
 
 def getStoryRights(id):
     data = 'data'

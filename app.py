@@ -14,7 +14,7 @@ from functions import (
     getNewId, createDataStoryFolder, removeFromDB, 
     deleteDataStoryFolder,getDataStory, getDataStorySettings, fs_tree_to_dict,
     tooManyStories, createDataFolder, set_status, createDataStoriesDB, getDataStoriesDB,
-    getListUUIDs, updateModifiedDate, saveDataStory, uri_validator
+    getListUUIDs, updateModifiedDate, saveDataStory, uri_validator, get_setting_users, add_user_rights
 )
 # https://peps.python.org/pep-0328/#rationale-for-parentheses
 
@@ -77,6 +77,24 @@ def set_settings():
     data = request.json
     result = set_status(data.get('id'), data.get('status'))
     return jsonify(result)
+
+@app.route("/get_setting_users", methods=['get'])
+def setting_users():
+    id = request.args.get("ds")
+    status = get_auth_status()
+    print(status);
+    result = get_setting_users(id, status["eppn"])
+    return jsonify(result)
+
+@app.route("/add_user_rights", methods=["GET"])
+def add_rights():
+    status = get_auth_status()
+    if status["logged_in"] == "yes":
+        id = request.args.get("ds")
+        eppn = request.args.get("eppn")
+        add_user_rights(id, eppn)
+    return jsonify({"status": "OK"})
+
 
 @app.route("/create_new")
 def create_new():
@@ -267,7 +285,7 @@ def resources(uuid, resourcetype, filename):
     # return json.dumps(status)
 
 def get_auth_status():
-    return {"logged_in": "yes", "user": "Rob Zeeman"}
+    return {"logged_in": "yes", "user": "Rob Zeeman", "eppn": "666"}
 
 
 
