@@ -14,7 +14,8 @@ from functions import (
     getNewId, createDataStoryFolder, removeFromDB, 
     deleteDataStoryFolder,getDataStory, getDataStorySettings, fs_tree_to_dict,
     tooManyStories, createDataFolder, set_status, createDataStoriesDB, getDataStoriesDB,
-    getListUUIDs, updateModifiedDate, saveDataStory, uri_validator, get_setting_users, add_user_rights
+    getListUUIDs, updateModifiedDate, saveDataStory, uri_validator, get_setting_users, add_user_rights, revoke_user_rights,
+    save_user_rights_str
 )
 # https://peps.python.org/pep-0328/#rationale-for-parentheses
 
@@ -82,9 +83,18 @@ def set_settings():
 def setting_users():
     id = request.args.get("ds")
     status = get_auth_status()
-    print(status);
+    #print(status);
     result = get_setting_users(id, status["eppn"])
     return jsonify(result)
+
+@app.route("/save_user_rights", methods=["POST"])
+def save_user_rights():
+    status = get_auth_status()
+    if status["logged_in"] == "yes":
+        data = request.json
+        save_user_rights_str(data.get("uuid"), data.get("eppn"), data.get("rights"))
+    return jsonify({"status": "OK"})
+
 
 @app.route("/add_user_rights", methods=["GET"])
 def add_rights():
@@ -95,6 +105,15 @@ def add_rights():
         add_user_rights(id, eppn)
     return jsonify({"status": "OK"})
 
+@app.route("/revoke_user_rights", methods=["GET"])
+def revoke_rights():
+    status = get_auth_status()
+    if status["logged_in"] == "yes":
+        print("Logged in")
+        id = request.args.get("ds")
+        eppn = request.args.get("eppn")
+        revoke_user_rights(id, eppn)
+    return jsonify({"status": "OK"})
 
 @app.route("/create_new")
 def create_new():

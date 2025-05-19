@@ -77,6 +77,20 @@ def fetch_data(sql):
         struct.append(row)
     return struct
 
+def change_data(sql, values):
+    data = 'data'
+    con = sl.connect(data + '/datastories.db')
+    cur = con.cursor()
+    cur.execute(sql, values)
+    con.commit()
+    cur.close()
+    con.close()
+    return {"status": "OK"}
+
+def save_user_rights_str(uuid, eppn, code):
+    sql = "UPDATE rights SET rights = ? WHERE story_uuid = ? AND eppn = ?"
+    values = (code, uuid, eppn)
+    return change_data(sql, values)
 
 def getDataStorySettings(id):
     data = 'data'
@@ -104,8 +118,15 @@ def getDataStorySettings(id):
     return struct[0]
 
 def add_user_rights(uuid, eppn):
-    sql = "INSERT INTO rights (story_uuid, eppn, rights) VALUES ('" + uuid +"', '" + eppn + "', 'R----')"
-    result = fetch_data(sql)
+    sql = "INSERT INTO rights (story_uuid, eppn, rights) VALUES (?, ?, ?)"
+    values = (uuid, eppn, 'R----')
+    result = change_data(sql, values)
+    return result;
+
+def revoke_user_rights(uuid, eppn):
+    sql = "DELETE FROM rights WHERE story_uuid = ? AND eppn = ?"
+    values = (uuid, eppn)
+    result = change_data(sql, values)
     return result;
 
 def getStoryRights(id):
@@ -113,6 +134,7 @@ def getStoryRights(id):
     con = sl.connect(data + '/datastories.db')
     cur = con.cursor()
     sql = "select v.email, v.name, v.eppn, r.rights from rights  r inner join visitors  v on r.eppn = v.eppn where r.story_uuid = '" + id + "'"
+    print(sql)
     cur.execute(sql)
     names = list(map(lambda x: x[0], cur.description)) # ergens opgezocht
     result = cur.fetchall()
