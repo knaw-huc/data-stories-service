@@ -173,18 +173,14 @@ def getDataStoriesDB(auth_status):
     con = sl.connect(data + '/datastories.db')
     cur = con.cursor()
     if auth_status["logged_in"] == "yes":
-        sql = "SELECT uuid, title, status, created, modified, owner, groep FROM stories"
+        sql = "SELECT uuid, title, status, created, modified, owner, eppn, groep FROM stories"
     else:
-        sql = "SELECT uuid, title, status, created, modified, owner, groep FROM stories WHERE status = 'P'"
+        sql = "SELECT uuid, title, status, created, modified, owner, eppn, groep FROM stories WHERE status = 'P'"
     cur.execute(sql)
     names = list(map(lambda x: x[0], cur.description)) # ergens opgezocht
-    print('names', names)
     result = cur.fetchall()
-
     cur.close()
     con.close()
-
-    print('result', result)
 
     struct = []
     for x in result:
@@ -198,11 +194,29 @@ def getDataStoriesDB(auth_status):
             value = x[y]
             row[key] = value
             # s.append({key: value})
-
+        if row["eppn"] == auth_status["eppn"]:
+            row["rights"] = "RWDCS"
+        else:
+            row["rights"] = "-----"
         struct.append(row)
-    print('struct', struct)
+
     return struct
 
+def add_rights_to_storylist(list, eppn):
+    retList = []
+    for item in list:
+        rights = get_rights(list["uuid"], eppn)
+        if rights:
+            item["rights"] = rights
+        retList.append(item)
+    return retList
+
+
+def get_rights(uuid, eppn):
+    sql = "SELECT rights FROM rights WHERE story_uuid = ? AND eppn =?"
+    values = (uuid, eppn)
+    result = fetch_data(sql, values)
+    return result
 
 def getListUUIDs():
     data = 'data'

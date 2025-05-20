@@ -170,16 +170,9 @@ def getDataStories():
     status = 'OK'
     # structure = fs_tree_to_dict(data)
     # print(structure)
-    if 'logged_in' in session:
-        logged = session["logged_in"]
-    else:
-        logged = "no"
-    if 'user' in session:
-        user = session["user"]
-    else:
-        user = ""
     auth_status = get_auth_status()
     structure = getDataStoriesDB(auth_status)
+
     response = {"status": status, "auth": auth_status, "structure": structure}
     return jsonify(response)
 
