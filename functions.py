@@ -197,25 +197,30 @@ def getDataStoriesDB(auth_status):
         if row["eppn"] == auth_status["eppn"]:
             row["rights"] = "RWDCS"
         else:
-            row["rights"] = "-----"
-        struct.append(row)
+            rights = get_rights(row["uuid"], auth_status["eppn"])
+            if rights:
+                row["rights"] = rights[0]["rights"]
+            else:
+                row["rights"] = "-----"
+        if row["status"] == 'P' or not row["rights"] == "-----":
+            struct.append(row)
 
     return struct
 
 def add_rights_to_storylist(list, eppn):
     retList = []
     for item in list:
-        rights = get_rights(list["uuid"], eppn)
+        rights = get_rights(item["uuid"], eppn)
         if rights:
-            item["rights"] = rights
+            item["rights"] = rights[0]["rights"]
         retList.append(item)
     return retList
 
 
 def get_rights(uuid, eppn):
-    sql = "SELECT rights FROM rights WHERE story_uuid = ? AND eppn =?"
-    values = (uuid, eppn)
-    result = fetch_data(sql, values)
+    sql = "SELECT rights FROM rights WHERE story_uuid = '" + uuid + "' AND eppn = '" + eppn + "'"
+    #values = (uuid, eppn)
+    result = fetch_data(sql)
     return result
 
 def getListUUIDs():
@@ -225,12 +230,9 @@ def getListUUIDs():
     sql = "SELECT uuid FROM stories"
     cur.execute(sql)
     result = cur.fetchall() # list of tuples
-    res = [ele[0] for ele in result] # list comprehension 
-    print('result', res)
-    
+    res = [ele[0] for ele in result] # list comprehension
     cur.close()
     con.close()
-
     return list(res)
 
 

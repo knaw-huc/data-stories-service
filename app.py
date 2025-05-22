@@ -297,8 +297,8 @@ def resources(uuid, resourcetype, filename):
     # return json.dumps(status)
 
 def get_auth_status():
-    return {"logged_in": "yes", "user": "Rob Zeeman", "eppn": "666"}
-
+    return {"logged_in": "yes", "user": "Maarten van der Peet", "eppn": "111"}
+    #return {"logged_in": "yes", "user": "Rob Zeemn", "eppn": "666"}
 
 
 #Start main program
