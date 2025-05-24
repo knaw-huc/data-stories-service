@@ -216,6 +216,13 @@ def add_rights_to_storylist(list, eppn):
         retList.append(item)
     return retList
 
+def get_item_rights(uuid, auth_status):
+    retStr = "-----"
+    if (auth_status["logged_in"] == 'yes'):
+        rights = get_rights(uuid, auth_status["eppn"])
+        if rights:
+            retStr = rights[0]["rights"]
+    return retStr
 
 def get_rights(uuid, eppn):
     sql = "SELECT rights FROM rights WHERE story_uuid = '" + uuid + "' AND eppn = '" + eppn + "'"

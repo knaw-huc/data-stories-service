@@ -15,7 +15,7 @@ from functions import (
     deleteDataStoryFolder,getDataStory, getDataStorySettings, fs_tree_to_dict,
     tooManyStories, createDataFolder, set_status, createDataStoriesDB, getDataStoriesDB,
     getListUUIDs, updateModifiedDate, saveDataStory, uri_validator, get_setting_users, add_user_rights, revoke_user_rights,
-    save_user_rights_str
+    save_user_rights_str, get_item_rights
 )
 # https://peps.python.org/pep-0328/#rationale-for-parentheses
 
@@ -24,9 +24,7 @@ app = Flask(__name__)
 app.secret_key = "bonzo"
 app.config['UPLOAD_FOLDER'] = '/data'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-app.config['SESSION_TYPE'] = 'filesystem'
-app.config["SESSION_COOKIE_SAMESITE"] = "None"
-app.config["SESSION_COOKIE_SECURE"] = False
+
 
 
 
@@ -146,9 +144,10 @@ def delete():
 # datastory is de inhoud van de json file, ik hoef geen structuur te parsen
 @app.route("/get_item", methods=['GET'] )
 def get_item():
-    status = get_auth_status();
     datastory = {}
     uuid = request.args.get("ds")
+    status = get_auth_status();
+    status["rights"] = get_item_rights(uuid, status)
     #print('uuid', uuid)
     if not uuid:
         status = 'INVALID REQUEST, NO UUID'
