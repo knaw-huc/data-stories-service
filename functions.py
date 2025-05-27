@@ -48,15 +48,16 @@ def createDataStoriesDB():
     con.close()
 
 def get_setting_users(uuid, eppn):
-    sql = "select v.email, v.eppn from visitors v where v.eppn not in (select r.eppn from rights r where story_uuid ='" + uuid +"') and v.eppn is not '" + eppn + "' order by email"
-    result = fetch_data(sql)
+    sql = "select v.email, v.eppn from visitors v where v.eppn not in (select r.eppn from rights r where story_uuid = ?) and v.eppn is not ? order by email"
+    values = (uuid, eppn)
+    result = fetch_data(sql, values)
     return result
 
-def fetch_data(sql):
+def fetch_data(sql, values):
     data = 'data'
     con = sl.connect(data + '/datastories.db')
     cur = con.cursor()
-    cur.execute(sql)
+    cur.execute(sql, values)
     names = list(map(lambda x: x[0], cur.description)) # ergens opgezocht
     #print(names)
     result = cur.fetchall()
@@ -219,16 +220,28 @@ def add_rights_to_storylist(list, eppn):
 def get_item_rights(uuid, auth_status):
     retStr = "-----"
     if (auth_status["logged_in"] == 'yes'):
-        rights = get_rights(uuid, auth_status["eppn"])
-        if rights:
-            retStr = rights[0]["rights"]
+        if is_owner(auth_status["eppn"], uuid):
+            retStr = 'RWDCS'
+        else:
+            rights = get_rights(uuid, auth_status["eppn"])
+            if rights:
+                retStr = rights[0]["rights"]
     return retStr
 
 def get_rights(uuid, eppn):
-    sql = "SELECT rights FROM rights WHERE story_uuid = '" + uuid + "' AND eppn = '" + eppn + "'"
-    #values = (uuid, eppn)
+    sql = "SELECT rights FROM rights WHERE story_uuid = ? AND eppn = ?"
+    values = (uuid, eppn)
     result = fetch_data(sql)
     return result
+
+def is_owner(eppn, uuid):
+    sql = "SELECT id FROM stories WHERE eppn = ? AND uuid = ?"
+    values = (eppn, uuid)
+    result = fetch_data(sql, values)
+    if result:
+        return True
+    else:
+        return False
 
 def getListUUIDs():
     data = 'data'

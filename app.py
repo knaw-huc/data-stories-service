@@ -201,11 +201,11 @@ def updateDataStory():
 # def allowed_file(filename):
 # 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route('/login', methods = ["GET"])
-def login():
-    session['logged_in'] = "yes"
-    session['user'] = "Rob Zeeman"
-    return(jsonify({"status": "ok", "logged_in": session.get('logged_in')}))
+# @app.route('/login', methods = ["GET"])
+# def login():
+#     session['logged_in'] = "yes"
+#     session['user'] = "Rob Zeeman"
+#     return(jsonify({"status": "ok", "logged_in": session.get('logged_in')}))
 
 
 @app.route('/upload', methods = ['POST', 'OPTIONS']) 
@@ -296,8 +296,8 @@ def resources(uuid, resourcetype, filename):
     # return json.dumps(status)
 
 def get_auth_status():
-    return {"logged_in": "yes", "user": "Maarten van der Peet", "eppn": "111"}
-    #return {"logged_in": "yes", "user": "Rob Zeemn", "eppn": "666"}
+    #return {"logged_in": "yes", "user": "Maarten van der Peet", "eppn": "111"}
+    return {"logged_in": "yes", "user": "Rob Zeemn", "eppn": "666"}
 
 
 #Start main program
