@@ -115,13 +115,13 @@ def revoke_rights():
 
 @app.route("/create_new")
 def create_new():
-    status = 'OK'
+    status = get_auth_status()
     max = 100 # maximaal 100 datastories
-    if tooManyStories(max):
+    if tooManyStories(max) or status["logged_in"] == "no":
         response = {"status": 'ff aan de rem getrokken'}
         return jsonify(response)        
 
-    id = getNewId()
+    id = getNewId(status)
     status = createDataStoryFolder(id, template)
     if status == True:
         # stringie = 'I created something new! De unieke id is: ' + str(id)
@@ -190,8 +190,6 @@ def updateDataStory():
     #with open(path, 'w') as f:
     #    json.dump(datastory, f)
     saveDataStory(datastory_id, datastory)
-
-
     updateModifiedDate(datastory_id, datastory_title)
 
     return jsonify({"status": "OK"});
@@ -297,7 +295,7 @@ def resources(uuid, resourcetype, filename):
 
 def get_auth_status():
     #return {"logged_in": "yes", "user": "Maarten van der Peet", "eppn": "111"}
-    return {"logged_in": "yes", "user": "Rob Zeemn", "eppn": "666"}
+    return {"logged_in": "yes", "user": "Rob Zeeman", "eppn": "666"}
 
 
 #Start main program

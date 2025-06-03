@@ -174,9 +174,9 @@ def getDataStoriesDB(auth_status):
     con = sl.connect(data + '/datastories.db')
     cur = con.cursor()
     if auth_status["logged_in"] == "yes":
-        sql = "SELECT uuid, title, status, created, modified, owner, eppn, groep FROM stories"
+        sql = "SELECT uuid, title, status, created, modified, owner, eppn, groep FROM stories ORDER BY modified DESC"
     else:
-        sql = "SELECT uuid, title, status, created, modified, owner, eppn, groep FROM stories WHERE status = 'P'"
+        sql = "SELECT uuid, title, status, created, modified, owner, eppn, groep FROM stories WHERE status = 'P' ORDER BY title"
     cur.execute(sql)
     names = list(map(lambda x: x[0], cur.description)) # ergens opgezocht
     result = cur.fetchall()
@@ -267,7 +267,7 @@ def tooManyStories(max):
     else:
         return False
 
-def getNewId():
+def getNewId(auth_status):
     # maakt gebruik van een sql lite database voor gegarandeerde oplopende unieke ids 
     datadir = 'data'
     unique_id = str(uuid.uuid4()) # kan misschien ook als database functie
@@ -283,8 +283,8 @@ def getNewId():
     con = sl.connect(datadir + '/datastories.db')
     cur = con.cursor()   
 
-    sql = "INSERT INTO stories (status, uuid, owner, title, groep, created, modified) values(?, ?, ?, ?, ?, datetime('now'), datetime('now'))"
-    value = ('D', unique_id, 'Rob Zeeman', title, 'HuC')
+    sql = "INSERT INTO stories (status, uuid, owner, eppn, title, groep, created, modified) values(?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))"
+    value = ('D', unique_id, auth_status["user"], auth_status["eppn"], title, 'HuC')
 
     cur.execute(sql, value)
     con.commit()
@@ -334,7 +334,7 @@ def deleteDataStoryFolder(uuid):
 def removeFromDB(uuid):
     con = sl.connect('data/datastories.db')
     cur = con.cursor()
-    sql = 'DELETE FROM stories WHERE uuid = ? LIMIT 1 '
+    sql = 'DELETE FROM stories WHERE uuid = ? '
     cur.execute(sql, (uuid,))
     con.commit()
 
@@ -349,8 +349,10 @@ def updateModifiedDate(unique_id, title):
     modified = now.strftime("%Y-%m-%d %H:%M:%S")    # creation timestamp
     con = sl.connect(datadir + '/datastories.db')
     cur = con.cursor()   
-    sql = 'UPDATE stories SET title = ?, modified = ? WHERE uuid = ? LIMIT 1 '
+    sql = 'UPDATE stories SET title = ?, modified = ? WHERE uuid = ?  '
+    print(sql)
     value = (title, modified, unique_id)
+    print(value)
     cur.execute(sql, value)
     con.commit()
     # best practice https://stackoverflow.com/questions/5504340/python-mysqldb-connection-close-vs-cursor-close
