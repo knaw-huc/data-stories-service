@@ -174,9 +174,9 @@ def getDataStoriesDB(auth_status):
     con = sl.connect(data + '/datastories.db')
     cur = con.cursor()
     if auth_status["logged_in"] == "yes":
-        sql = "SELECT uuid, title, status, created, modified, owner, eppn, groep FROM stories ORDER BY modified DESC"
+        sql = "SELECT uuid, title, status, strftime('%d-%m-%Y', created) as created, strftime('%d-%m-%Y (%H:%M)',modified) as modified, owner, eppn, groep FROM stories ORDER BY modified DESC"
     else:
-        sql = "SELECT uuid, title, status, created, modified, owner, eppn, groep FROM stories WHERE status = 'P' ORDER BY title"
+        sql = "SELECT uuid, title, status, strftime('%d-%m-%Y', created) as created, strftime('%d-%m-%Y (%H:%M)',modified) as modified, owner, eppn, groep FROM stories WHERE status = 'P' ORDER BY title"
     cur.execute(sql)
     names = list(map(lambda x: x[0], cur.description)) # ergens opgezocht
     result = cur.fetchall()
